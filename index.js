@@ -1,13 +1,27 @@
 'strict use'
-const uxp = require('uxp');
-let { app } = require("indesign");
+const { app } = require("indesign");
+const datas = require("./json/data.json")
 
-const openDialogBtn = document.getElementById("openDialogBtn");
+document.getElementById("createPage").onclick = createPage
+createPage()
+async function createPage() {
 
-openDialogBtn.onclick = showDialog;
-function showDialog() {
-    let myDocument = app.documents.add();
-    let myTextFrame = myDocument.pages.item(0).textFrames.add();
-    myTextFrame.geometricBounds = ["6p", "6p", "24p", "24p"];
-    myTextFrame.contents = "Hello World!";
+    //Document setting
+    app.documentPreferences.pageHeight = '225mm'
+    app.documentPreferences.pageWidth = '190mm'
+    app.documentPreferences.pagesPerDocument = 1
+    app.documentPreferences.startPageNumber = 1
+    app.documentPreferences.facingPages = true
+    const myDocument = app.documents.add();
+
+    //First page setting for not use
+    const myTextFrame = myDocument.pages.item(0).textFrames.add();
+    myTextFrame.geometricBounds = ["20mm", "20mm", "40mm", "140mm"];
+    myTextFrame.contents = "FIRST PAGE, DO NOT USE IT FOR NOTHING";
+    
+    for (const data of datas) {
+        const page = myDocument.pages.add()
+    }
+
 }
+

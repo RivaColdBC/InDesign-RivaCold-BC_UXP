@@ -1,6 +1,6 @@
 {
-  "id": "Test-v9wdxj",
-  "name": "test",
+  "id": "app.rivacold.bc.uxp.indesign.builder",
+  "name": "rivacold uxp indesign",
   "version": "1.0.0",
   "main": "index.html",
   "manifestVersion": 5,
@@ -16,49 +16,31 @@
       "id": "mainPanel",
       "label": "WebView Sample",
       "minimumSize": {
-        "width": 600,
-        "height": 850
+        "width": 300,
+        "height": 300
       },
       "maximumSize": {
         "width": 2000,
         "height": 2000
       },
       "preferredDockedSize": {
-        "width": 600,
-        "height": 700
+        "width": 300,
+        "height": 300
       },
       "preferredFloatingSize": {
-        "width": 600,
-        "height": 700
+        "width": 300,
+        "height": 300
       },
       "icons": [
         {
           "width": 32,
           "height": 32,
-          "path": "images/icon@1x.png",
+          "path": "assets/icono RIVA.jpg",
           "scale": [
-            1,
-            2
+            1
           ],
           "theme": [
-            "dark",
-            "darkest"
-          ],
-          "species": [
-            "generic"
-          ]
-        },
-        {
-          "width": 32,
-          "height": 32,
-          "path": "images/icon@2x.png",
-          "scale": [
-            1,
-            2
-          ],
-          "theme": [
-            "lightest",
-            "light"
+            "all"
           ],
           "species": [
             "generic"
@@ -71,30 +53,12 @@
     {
       "width": 32,
       "height": 32,
-      "path": "images/icon@1x.png",
+      "path": "assets/icono RIVA.jpg",
       "scale": [
-        1,
-        2
+        1
       ],
       "theme": [
-        "dark",
-        "darkest"
-      ],
-      "species": [
-        "generic"
-      ]
-    },
-    {
-      "width": 32,
-      "height": 32,
-      "path": "images/icon@2x.png",
-      "scale": [
-        1,
-        2
-      ],
-      "theme": [
-        "lightest",
-        "light"
+        "all"
       ],
       "species": [
         "generic"
