@@ -1,6 +1,48 @@
 [
     {
-        "Name": "FA"
+        "Title": "BITZER semi-hermetic compressors 50Hz",
+        "Descripcion": "BITZER semi-hermetic compressors 50Hz",
+        "Resource": [],
+        "Table": [
+            {
+                "Model": "",
+                "Price": "",
+                "Code": "",
+                "Data": [
+                    {
+                        "Name": "m3/h",
+                        "Value": "",
+                        "Unid": "m3/h"
+                    },
+                    {
+                        "Name": "Voltaje",
+                        "Value": "",
+                        "Unid": ""
+                    },
+                    {
+                        "Name": "MCC",
+                        "Value": "",
+                        "Unid": "A"
+                    },
+                    {
+                        "Name": "Resa",
+                        "Value": "",
+                        "Unid": "W"
+                    },
+                    {
+                        "Name": "Suc",
+                        "Value": "",
+                        "Unid": ""
+                    },
+                    {
+                        "Name": "Dis",
+                        "Value": "",
+                        "Unid": ""
+                    }
+                ]
+            }
+        ],
+        "Observation": []
     },
     {
         "Name": "SF"
