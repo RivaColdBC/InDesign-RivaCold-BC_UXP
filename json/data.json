@@ -2,7 +2,10 @@
     {
         "Title": "BITZER semi-hermetic compressors 50Hz",
         "Descripcion": "BITZER semi-hermetic compressors 50Hz",
-        "Resource": [],
+        "Resource": {
+            "Incio": [],
+            "Dimension": []
+        },
         "Table": [
             {
                 "Model": "2JES\u201007Y",
@@ -12437,6 +12440,7 @@
                 ]
             }
         ],
+        "Dimension": [],
         "Observation": []
     },
     {
