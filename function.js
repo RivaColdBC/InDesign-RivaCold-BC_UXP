@@ -1,15 +1,16 @@
 const { FitOptions } = require("indesign");
-const font = ["Frutiger 45 Light", "Frutiger 55", "Frutiger 65", "Frutiger 75 Black", "Frutiger 95 Ultra Black"]
+const Font = ["Frutiger LT Std"]
+const Style = ["45 Light", "55 Roman", "65 Bold", "75 Black", "95 Ultra Black"]
 
 module.exports.setConfig = (app, parameter) => {
-    app.documentPreferences.pageHeight = parameter.pageHeight + 'mm'
-    app.documentPreferences.pageWidth = parameter.pageWidth + 'mm'
+    app.documentPreferences.pageHeight = parameter.pageHeight
+    app.documentPreferences.pageWidth = parameter.pageWidth
     app.documentPreferences.pagesPerDocument = 1
     app.documentPreferences.startPageNumber = 1
     app.documentPreferences.facingPages = true
     const myDocument = app.documents.add();
     const myTextFrame = myDocument.pages.item(0).textFrames.add();
-    myTextFrame.geometricBounds = [parameter.startHeight + "mm", parameter.startWidth + "mm", parameter.endHeight + "mm", parameter.endWidth + "mm",];
+    myTextFrame.geometricBounds = [parameter.startHeight, parameter.startWidth, parameter.endHeight, parameter.endWidth];
     myTextFrame.contents = "FIRST PAGE, DO NOT USE IT FOR NOTHING";
     return myDocument
 }
@@ -20,18 +21,20 @@ module.exports.addImagen = (page, data) => {
 }
 
 module.exports.addText = (page, data) => {
+    console.log(Style[data.Style])
     const frame = page.textFrames.add({
         contents: data.content,
+        geometricBounds: [0, 0, data.size_y, data.size_x],
+        strokeWidth: 0,
         parentStory: {
-            appliedFont: font[data.font],
-            pointSize: data.fontSize
+            appliedFont: Font[data.Font],
+            fontStyle: Style[data.Style],
+            pointSize: data.fontSize,
+            justification: data.justification
         },
     })
-    if (data.justification) frame.texts[0].justification = data.justification
     if (data.vertical) frame.textFramePreferences.verticalJustification = data.vertical
-    console.log(page.swatches)
-    frame.texts[0].fillColor = [1, 2, 3]
-    frame.texts[0].tracking = 40
+    if (data.rotation) frame.absoluteRotationAngle = data.rotation
     doMove(frame, data)
 }
 
