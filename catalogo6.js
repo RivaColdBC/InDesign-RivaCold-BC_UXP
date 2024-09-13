@@ -1,23 +1,31 @@
-'strict use'
 const { app } = require("indesign");
 const datas = require("./json/data.json")
-const { datas } = require("function.js")
+const fUXP = require("./function.js")
+const parameter = { pageHeight: 225, pageWidth: 190, startHeight: 30, startWidth: 20, endHeight: 225 - 20, endWidth: 190 - 20, }
 
-document.getElementById("catalogo6").onclick = createPage
-
-async function createPage() {
-    app.documentPreferences.pageHeight = '225mm'
-    app.documentPreferences.pageWidth = '190mm'
-    app.documentPreferences.pagesPerDocument = 1
-    app.documentPreferences.startPageNumber = 1
-    app.documentPreferences.facingPages = true
-    const myDocument = app.documents.add();
-    const myTextFrame = myDocument.pages.item(0).textFrames.add();
-    myTextFrame.geometricBounds = ["20mm", "20mm", "40mm", "140mm"];
-    myTextFrame.contents = "FIRST PAGE, DO NOT USE IT FOR NOTHING";
-    for (const data of datas) {
-        const page = myDocument.pages.add()
+createDoc = () => {
+    try {
+        const Doc = fUXP.setConfig(app, parameter)
+        for (const data of datas) {
+            const page = createPage(Doc, data)
+        }
+        console.log(page)
+    } catch (error) {
+        console.log(error)
     }
 }
 
+
+createPage = (Doc, data) => {
+    const page = Doc.pages.add()
+    fUXP.addImagen(page, { content: "C:\\Proyecto/InDesign-RivaCold-BC_UXP/assets/catalogo6/bg/border1.png" })
+    fUXP.addImagen(page, { content: "C:\\Proyecto/InDesign-RivaCold-BC_UXP/assets/catalogo6/bg/border1.png", x: parameter.pageWidth, geo_x: 1 })
+    fUXP.addText(page, { content: data.Label, y: 15 })
+    fUXP.addText(page, { content: data.Label, x: parameter.pageWidth, y: 15, geo_x: 1 })
+    return page
+}
+
+
+document.getElementById("catalogo6").onclick = createDoc
+createDoc()
 

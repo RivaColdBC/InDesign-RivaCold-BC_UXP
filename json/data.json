@@ -2,6 +2,7 @@
     {
         "Title": "BITZER semi-hermetic compressors 50Hz",
         "Descripcion": "BITZER semi-hermetic compressors 50Hz",
+        "Label": "Compresor Semihermetico",
         "Resource": {
             "Incio": [],
             "Dimension": []
