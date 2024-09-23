@@ -22,7 +22,7 @@ invert = (v) => { return { x: v ? 0 : parameter.pageWidth * 2, geo_x: v ? 0 : 1,
 createPage = (Doc, data) => {
     const page = Doc.pages.add()
     const invPar = invert(page.index === 0)
-    fUXP.addImagen(page, { content: "C:\\Proyecto/InDesign-RivaCold-BC_UXP/assets/catalogo6/bg/border1.png", x: invPar.x, geo_x: invPar.geo_x })
+    fUXP.addImagen(page, { content: "C:\\Proyecto/InDesign-RivaCold-BC_UXP/assets/catalogo6/bg/"+(page.index === 0?"encabezado izquierda.jpg":"encabezado derecha.jpg"), x: invPar.x, geo_x: invPar.geo_x })
     fUXP.addText(page, { content: data.Label, x: invPar.x, y: 15, geo_x: invPar.geo_x, size_x: 18, size_y: 18, justification: Justification.CENTER_ALIGN, vertical: VerticalJustification.CENTER_ALIGN, fontSize: 7.5, Style: 2, tfillColor: Doc.swatches.itemByName("r255g255b255"), bgfillColor: Doc.swatches.itemByName("rivacold nou") })
     fUXP.addText(page, { content: data.Label, x: invPar.x + invPar.signe * 5, y: 105, geo_x: invPar.geo_x, size_x: 70, size_y: 8, rotation: 90, justification: Justification.RIGHT_ALIGN, vertical: VerticalJustification.CENTER_ALIGN, vertical: VerticalJustification.CENTER_ALIGN, fontSize: 11, Style: 3, tfillColor: Doc.swatches.itemByName("c0m0y0k68") })
     fUXP.addText(page, { content: page.properties.name, x: invPar.x, y: parameter.pageHeight, geo_y: 1, geo_x: invPar.geo_x, size_x: 18, size_y: 10, justification: Justification.CENTER_ALIGN, fontSize: 9, Style: 1, tfillColor: Doc.swatches.itemByName("r255g255b255"), bgfillColor: Doc.swatches.itemByName("C=92 M=62 Y=27 K=58"), vertical: VerticalJustification.CENTER_ALIGN, })
@@ -35,5 +35,5 @@ createPage = (Doc, data) => {
 
 
 document.getElementById("catalogo6").onclick = createDoc
-createDoc()
+//createDoc()
 
