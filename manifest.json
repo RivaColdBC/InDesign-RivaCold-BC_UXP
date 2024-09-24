@@ -46,15 +46,7 @@
             "generic"
           ]
         }
-      ],
-      "permissions": {
-        "fileSystem": {
-          "read": true,
-          "write": true,
-          "pickFolders": true,
-          "pickFiles": true
-        }
-      }
+      ]
     }
   ],
   "icons": [
@@ -72,5 +64,8 @@
         "generic"
       ]
     }
-  ]
+  ],
+  "requiredPermissions": {
+    "localFileSystem": "request"
+  }
 }
