@@ -1,6 +1,6 @@
 const { app } = require("indesign");
 const fs = require('uxp').storage.localFileSystem;
-const { formats } = require('uxp').storage; // Importar los formatos de escritura correctamente
+const { formats } = require('uxp').storage;
 
 // Función principal para exportar e importar todas las tablas de un documento InDesign
 async function exportAndLinkTables() {
@@ -18,27 +18,11 @@ async function exportAndLinkTables() {
         // Paso 1: Exportar todas las tablas a CSV
         await exportAllTablesToCSV(doc, exportFolder, tablesData);
 
-        // Solicitar al usuario que convierta manualmente los CSV a Excel
-        console.log("Por favor, abre los archivos CSV en Excel, guárdalos como .xlsx y cierra Excel antes de continuar.");
-
-        // Paso 2: Importar los archivos Excel y vincularlos de nuevo a InDesign
-        await importAndLinkExcelFiles(doc, tablesData, exportFolder);
+        // Paso 2: Importar automáticamente los archivos CSV y vincularlos de nuevo a InDesign
+        await importCsvFilesAutomatically(doc, exportFolder, tablesData);
     } catch (e) {
         console.error("Error en la función principal:", e);
     }
-}
-
-// Función para contar todas las tablas en un documento
-function countTotalTables(doc) {
-    let totalTables = 0;
-    for (let i = 0; i < doc.pages.length; i++) {
-        const page = doc.pages.item(i);
-        for (let j = 0; j < page.textFrames.length; j++) {
-            const textFrame = page.textFrames.item(j);
-            totalTables += textFrame.tables.length;
-        }
-    }
-    return totalTables;
 }
 
 // Función para exportar todas las tablas del documento a archivos CSV
@@ -62,7 +46,7 @@ async function exportAllTablesToCSV(doc, exportFolder, tablesData) {
                         const csvFile = await exportFolder.createFile(csvFileName, { overwrite: true });
 
                         await exportTableToCSV(table, csvFile);
-                        tablesData.push({ pageIndex: i, frameIndex: j, tableIndex: k, filePath: csvFile.nativePath });
+                        tablesData.push({ pageIndex: i, frameIndex: j, tableIndex: k, fileName: csvFileName });
                         tableIndex++;
 
                         // Mostrar progreso en la consola
@@ -92,14 +76,14 @@ async function exportTableToCSV(table, csvFile) {
 
             for (let j = 0; j < row.cells.length; j++) {
                 const cell = row.cells.item(j);
-                rowData.push(cell.contents.toString().replace(/,/g, '')); // Remover comas para evitar errores CSV
+                rowData.push(cell.contents.toString().replace(/,/g, '')); // Remover comas para evitar errores de CSV
             }
 
             csvContent += rowData.join(",") + "\n"; // Formato CSV de la fila
         }
 
-        // Guardar el contenido CSV en un archivo con el formato correcto
-        await csvFile.write(csvContent, { format: formats.utf8 }); // Especificar formato UTF-8
+        // Guardar el contenido CSV en un archivo
+        await csvFile.write(csvContent, { format: formats.utf8 });
 
         console.log(`Tabla exportada a: ${csvFile.nativePath}`);
     } catch (e) {
@@ -107,8 +91,8 @@ async function exportTableToCSV(table, csvFile) {
     }
 }
 
-// Función para importar y vincular los archivos Excel en las tablas originales
-async function importAndLinkExcelFiles(doc, tablesData, exportFolder) {
+// Función para importar automáticamente los archivos CSV en las tablas originales
+async function importCsvFilesAutomatically(doc, exportFolder, tablesData) {
     try {
         let importedCount = 0;
         const totalTables = tablesData.length;
@@ -119,28 +103,37 @@ async function importAndLinkExcelFiles(doc, tablesData, exportFolder) {
                 const page = doc.pages.item(data.pageIndex);
                 const textFrame = page.textFrames.item(data.frameIndex);
 
-                // Seleccionar el archivo Excel correspondiente
-                const excelFile = await fs.getFileForOpening({ types: ["xlsx"] });
-                if (!excelFile) {
-                    console.log(`No se seleccionó el archivo Excel para la tabla ${i + 1}. Operación cancelada.`);
-                    continue;
-                }
-
-                // Importar el archivo Excel al mismo lugar de la tabla original
-                textFrame.place(excelFile.nativePath);
+                // Obtener el archivo CSV directamente desde el exportFolder utilizando el nombre guardado
+                const csvFile = await exportFolder.getEntry(data.fileName);
+                console.log(csvFile)
+                // Importar el archivo CSV al mismo lugar de la tabla original
+                textFrame.place(csvFile);
                 importedCount++;
 
                 // Mostrar progreso en la consola
                 console.log(`Importando tabla ${importedCount} de ${totalTables}...`);
             } catch (e) {
-                console.error(`Error al importar y vincular el archivo Excel para la tabla ${i + 1}:`, e);
+                console.error(`Error al importar y vincular el archivo CSV para la tabla ${i + 1}:`, e);
             }
         }
 
-        console.log(`${importedCount} tablas importadas y vinculadas correctamente desde Excel.`);
+        console.log(`${importedCount} tablas importadas y vinculadas correctamente desde CSV.`);
     } catch (e) {
         console.error("Error en la importación de tablas:", e);
     }
+}
+
+// Función para contar todas las tablas en un documento
+function countTotalTables(doc) {
+    let totalTables = 0;
+    for (let i = 0; i < doc.pages.length; i++) {
+        const page = doc.pages.item(i);
+        for (let j = 0; j < page.textFrames.length; j++) {
+            const textFrame = page.textFrames.item(j);
+            totalTables += textFrame.tables.length;
+        }
+    }
+    return totalTables;
 }
 
 // Ejecutar la función principal

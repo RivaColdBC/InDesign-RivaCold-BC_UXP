@@ -24,10 +24,10 @@ module.exports.addImagen = (page, data) => {
 module.exports.addText = (page, data) => {
     const frame = page.textFrames.add({
         contents: data.content,
-        geometricBounds: [0, 0, data.size_y, data.size_x],
+        geometricBounds: [0, 0, data.size_y || 50, data.size_x || 50],
         strokeWidth: 0,
         parentStory: {
-            appliedFont: Font[data.Font || 7],
+            appliedFont: Font[data.Font || 0],
             fontStyle: Style[data.Style || 7],
             pointSize: data.fontSize || 7,
             justification: data.justification,
@@ -58,32 +58,42 @@ module.exports.addTable = (page, data) => {
         geometricBounds: [data.y, data.x, data.y + data.size_y, data.x + data.size_x],
         contents: "",
     });
-
     const table = frame.parentStory.tables.add({
         bodyRowCount: data.Table.length,
         columnCount: Object.keys(data.Table[0]).length,
         headerRowCount: 1,
     });
-    if (data.headfillColor) table.rows.item(0).cells.everyItem().fillColor = data.headfillColor
-    if (data.headfillColor) table.rows.item(0).cells.everyItem().texts.everyItem().fillColor = Doc.swatches.itemByName("r255g255b255")
-    table.cells.everyItem().texts.item(0).appliedFont = Font[data.Font || 0]
-    table.cells.everyItem().texts.item(0).fontStyle = Style[0]
-    table.cells.everyItem().texts.item(0).pointSize = 7
+    table.cells.everyItem().height = data.bodyHeight || 4.5
+    table.cells.everyItem().texts.everyItem().appliedFont = Font[data.Font || 0]
+    table.cells.everyItem().texts.everyItem().fontStyle = Style[0]
+    table.cells.everyItem().texts.everyItem().pointSize = 6.5
     table.cells.everyItem().topEdgeStrokeColor = Doc.swatches.itemByName("None");
     table.cells.everyItem().bottomEdgeStrokeColor = Doc.swatches.itemByName("None");
     table.cells.everyItem().leftEdgeStrokeColor = Doc.swatches.itemByName("None");
     table.cells.everyItem().rightEdgeStrokeColor = Doc.swatches.itemByName("None");
+    table.cells.everyItem().texts.everyItem().justification = Justification.centerAlign
+    table.cells.everyItem().texts.everyItem().verticalJustificationr = VerticalJustification.centerAlign
+    for (let i = 0; i < table.rows.length; i++) if (i % 2 === 0) {
+        table.rows.item(i).cells.everyItem().fillColor = Doc.swatches.itemByName("rivacold nou")
+        table.rows.item(i).cells.everyItem().fillTint = 11
+    }
+
+    table.columns.item(Object.keys(data.Table[0]).findIndex((a) => a === 'Model')).cells.everyItem().texts.everyItem().fontStyle = Style[3]
+    table.columns.item(Object.keys(data.Table[0]).findIndex((a) => a === '€uros')).cells.everyItem().texts.everyItem().fontStyle = Style[3]
+    table.columns.item(Object.keys(data.Table[0]).findIndex((a) => a === '€uros')).cells.everyItem().texts.everyItem().fillColor = Doc.swatches.itemByName("C=98 M=55 Y=55 K=5")
+
+    table.rows.item(0).cells.everyItem().height = data.headHeight || 6
+    table.rows.item(0).cells.everyItem().fillColor = Doc.swatches.itemByName("rivacold nou")
+    table.rows.item(0).cells.everyItem().fillTint = 100
+    table.rows.item(0).cells.everyItem().texts.everyItem().fillColor = Doc.swatches.itemByName("r255g255b255")
+    table.rows.item(0).cells.everyItem().texts.everyItem().pointSize = 6
+    table.rows.item(0).cells.everyItem().texts.everyItem().fontStyle = Style[2]
+
+
 
     for (const [index, value] of Object.keys(data.Table[0]).entries()) table.rows.item(0).cells.item(index).contents = value.toString()
     for (const [index, value] of data.Table.entries()) for (const [index2, value2] of Object.keys(value).entries()) table.rows.item(index + 1).cells.item(index2).contents = value[value2].toString()
-    const tableHeight = getTableTotalHeight(table);
-    const frameHeight = frame.geometricBounds[2] - frame.geometricBounds[0];
-    if (tableHeight > frameHeight) {
-        const nextPage = page.parent.pages.add();
-        const secondFrame = nextPage.textFrames.add({ geometricBounds: [50, 50, 400, 500], contents: "" });
-        frame.nextTextFrame = secondFrame;
-        return secondFrame.geometricBounds[2];
-    }
+    doMove(frame, data)
     return frame.geometricBounds[2]
 }
 
@@ -102,5 +112,3 @@ getTableTotalHeight = (table) => {
     for (let i = 0; i < table.rows.length; i++) totalHeight += table.rows.item(i).height
     return totalHeight;
 }
-
-setTableNextFrame = () => { }
