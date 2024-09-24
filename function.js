@@ -1,4 +1,4 @@
-const { FitOptions, SaveOptions } = require("indesign");
+const { FitOptions, SaveOptions, Justification, VerticalJustification } = require("indesign");
 const Font = ["Frutiger LT Std"]
 const Style = ["45 Light", "55 Roman", "65 Bold", "75 Black", "95 Ultra Black"]
 const dir = "C:\\Proyecto\\InDesign-RivaCold-BC_UXP"
@@ -71,8 +71,8 @@ module.exports.addTable = (page, data) => {
     table.cells.everyItem().bottomEdgeStrokeColor = Doc.swatches.itemByName("None");
     table.cells.everyItem().leftEdgeStrokeColor = Doc.swatches.itemByName("None");
     table.cells.everyItem().rightEdgeStrokeColor = Doc.swatches.itemByName("None");
-    table.cells.everyItem().texts.everyItem().justification = Justification.centerAlign
-    table.cells.everyItem().texts.everyItem().verticalJustificationr = VerticalJustification.centerAlign
+    table.cells.everyItem().texts.everyItem().justification = Justification.CENTER_ALIGN
+    table.cells.everyItem().verticalJustification = VerticalJustification.CENTER_ALIGN
     for (let i = 0; i < table.rows.length; i++) if (i % 2 === 0) {
         table.rows.item(i).cells.everyItem().fillColor = Doc.swatches.itemByName("rivacold nou")
         table.rows.item(i).cells.everyItem().fillTint = 11
