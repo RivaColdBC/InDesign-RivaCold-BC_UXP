@@ -3,8 +3,17 @@ const Font = ["Frutiger LT Std"]
 const Style = ["45 Light", "55 Roman", "65 Bold", "75 Black", "95 Ultra Black"]
 const dir = "C:\\Proyecto\\InDesign-RivaCold-BC_UXP"
 let Doc
+const TableParameter = [
+    { Name: "Model", Width: 22, fontStyle: Style[3] },
+    { Name: "€uros", fillColor: "C=98 M=55 Y=55 K=5", fontStyle: Style[3], Width: 21 },
+    { Name: "Code", Width: 24 },
+    { Name: "RPM", Width: 12 },
+    { Name: "Current", Width: 12 },
+    { Name: "Power", Width: 12 },
+    { Name: "Connections", Width: 22 },
+]
+
 module.exports.setConfig = (app, parameter) => {
-    //app.documents.everyItem().close(SaveOptions.NO)
     if (app.documents.length > 0) app.documents.firstItem().close(SaveOptions.NO)
     app.updateFonts()
     app.loadSwatches(dir + "/data/indd/Proves components Yang.indd")
@@ -41,7 +50,7 @@ module.exports.addText = (page, data) => {
     if (data.rotation) frame.absoluteRotationAngle = data.rotation
     if (data.fit) doFit(frame)
     doMove(frame, data)
-    return frame.geometricBounds[2]
+    return frame.geometricBounds[2] + data.padding || 0
 }
 module.exports.addLine = (page, data) => {
     const line = page.graphicLines.add({
@@ -78,9 +87,14 @@ module.exports.addTable = (page, data) => {
         table.rows.item(i).cells.everyItem().fillTint = 11
     }
 
-    table.columns.item(Object.keys(data.Table[0]).findIndex((a) => a === 'Model')).cells.everyItem().texts.everyItem().fontStyle = Style[3]
-    table.columns.item(Object.keys(data.Table[0]).findIndex((a) => a === '€uros')).cells.everyItem().texts.everyItem().fontStyle = Style[3]
-    table.columns.item(Object.keys(data.Table[0]).findIndex((a) => a === '€uros')).cells.everyItem().texts.everyItem().fillColor = Doc.swatches.itemByName("C=98 M=55 Y=55 K=5")
+    for (const TParam of TableParameter) {
+        const index = Object.keys(data.Table[0]).findIndex((a) => a === TParam.Name)
+        if (index > -1) {
+            if (TParam.Width) table.columns.item(index).width = TParam.Width
+            if (TParam.fontStyle) table.columns.item(index).cells.everyItem().texts.everyItem().fontStyle = TParam.fontStyle
+            if (TParam.fillColor) table.columns.item(index).cells.everyItem().texts.everyItem().fillColor = Doc.swatches.itemByName(TParam.fillColor)
+        }
+    }
 
     table.rows.item(0).cells.everyItem().height = data.headHeight || 6
     table.rows.item(0).cells.everyItem().fillColor = Doc.swatches.itemByName("rivacold nou")
@@ -88,8 +102,6 @@ module.exports.addTable = (page, data) => {
     table.rows.item(0).cells.everyItem().texts.everyItem().fillColor = Doc.swatches.itemByName("r255g255b255")
     table.rows.item(0).cells.everyItem().texts.everyItem().pointSize = 6
     table.rows.item(0).cells.everyItem().texts.everyItem().fontStyle = Style[2]
-
-
 
     for (const [index, value] of Object.keys(data.Table[0]).entries()) table.rows.item(0).cells.item(index).contents = value.toString()
     for (const [index, value] of data.Table.entries()) for (const [index2, value2] of Object.keys(value).entries()) table.rows.item(index + 1).cells.item(index2).contents = value[value2].toString()

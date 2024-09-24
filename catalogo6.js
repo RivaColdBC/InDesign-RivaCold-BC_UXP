@@ -10,9 +10,9 @@ console.clear()
 createDoc = () => {
     for (const [index, data] of datas.entries()) {
         createPage(data)
-        pageStatus.height = fUXP.addText(page, { content: data.Label, x: invPar.x + invPar.signe * pageStatus.width, geo_x: invPar.geo_x, y: pageStatus.height, size_x: parameter.Width, size_y: 10, justification: invPar.justification, fontSize: 7.5, Style: 1, tfillColor: Doc.swatches.itemByName("rivacold nou"), fit: true })
-        pageStatus.height = fUXP.addText(page, { content: data.Title, x: invPar.x + invPar.signe * pageStatus.width, geo_x: invPar.geo_x, y: pageStatus.height, size_x: parameter.Width, size_y: 10, justification: invPar.justification, fontSize: 7.5, Style: 1, tfillColor: Doc.swatches.itemByName("C=92 M=97 Y=100 K=21"), fit: true })
-        pageStatus.height = fUXP.addText(page, { content: data.Descripcion, x: invPar.x + invPar.signe * pageStatus.width, geo_x: invPar.geo_x, y: pageStatus.height, size_x: parameter.Width, size_y: 10, justification: invPar.justification, fontSize: 7, Style: 1, tfillColor: Doc.swatches.itemByName("C=92 M=97 Y=100 K=21"), fit: true })
+        pageStatus.height = fUXP.addText(page, { content: data.Label, x: invPar.x + invPar.signe * pageStatus.width, geo_x: invPar.geo_x, y: pageStatus.height, size_x: parameter.Width, size_y: 10, justification: invPar.justification, fontSize: 7.5, Style: 1, tfillColor: Doc.swatches.itemByName("rivacold nou"), fit: true, padding: 2 })
+        pageStatus.height = fUXP.addText(page, { content: data.Title, x: invPar.x + invPar.signe * pageStatus.width, geo_x: invPar.geo_x, y: pageStatus.height, size_x: parameter.Width, size_y: 10, justification: invPar.justification, fontSize: 7.5, Style: 1, tfillColor: Doc.swatches.itemByName("C=92 M=97 Y=100 K=21"), fit: true, padding: 2 })
+        pageStatus.height = fUXP.addText(page, { content: data.Descripcion, x: invPar.x + invPar.signe * pageStatus.width, geo_x: invPar.geo_x, y: pageStatus.height, size_x: parameter.Width, size_y: 10, justification: invPar.justification, fontSize: 7, Style: 1, tfillColor: Doc.swatches.itemByName("C=92 M=97 Y=100 K=21"), fit: true, padding: 2 })
         if (data.Table.length > 0) pageStatus.height = checkTableHeight(pageStatus.height, data.Table, data)
         console.log(index)
     }
@@ -36,10 +36,10 @@ createPage = (data) => {
 
 checkTableHeight = (Height, Table, data) => {
     if (parameter.endHeight - Height > 6 + 4.5 * Table.length)
-        return fUXP.addTable(page, { Table: Table, x: invPar.x + invPar.signe * pageStatus.width, geo_x: invPar.geo_x, y: pageStatus.height, size_x: parameter.Width, size_y: parameter.endHeight - pageStatus.height })
+        return fUXP.addTable(page, { Table: Table, x: invPar.x + invPar.signe * pageStatus.width, geo_x: invPar.geo_x, y: pageStatus.height, size_x: parameter.Width, size_y: parameter.endHeight - Height })
     else {
         const len = Math.round((parameter.endHeight - Height - 6) / 4.5)
-        fUXP.addTable(page, { Table: Table.slice(0, len), x: invPar.x + invPar.signe * pageStatus.width, geo_x: invPar.geo_x, y: pageStatus.height, size_x: parameter.Width, size_y: parameter.endHeight - pageStatus.height })
+        fUXP.addTable(page, { Table: Table.slice(0, len), x: invPar.x + invPar.signe * pageStatus.width, geo_x: invPar.geo_x, y: pageStatus.height, size_x: parameter.Width, size_y: parameter.endHeight - Height })
         createPage(data)
         return checkTableHeight(parameter.startHeight, Table.slice(len, Table.length - 1), data)
     }
